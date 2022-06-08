@@ -54,23 +54,23 @@ final class MyDiffDataSource: UIViewController {
     
     
     //  MARK: -  View ControllerLifecycle Events
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataSource = UITableViewDiffableDataSource<Section,MYNumber>(tableView: tableView) {
-                (tableView: UITableView,
-                 indexPath: IndexPath,
-                 item: MYNumber) -> UITableViewCell? in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-            cell.textLabel?.text = item.numberName
-            return cell
-        }
+        setUpDataSource()
         
         tableViewSetup()
         textViewSetup()
         setupView()
         updateUI()
     }
+    
+}
+
+//  MARK: -  Extension for placing objects in the user interface
+
+extension MyDiffDataSource {
     
     fileprivate func textViewSetup() {
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -79,14 +79,12 @@ final class MyDiffDataSource: UIViewController {
         
         textView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.35).isActive = true
         textView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
-        
         textView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        
         textView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        
     }
     
     fileprivate func tableViewSetup() {
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         view.addSubview(tableView)
@@ -97,10 +95,21 @@ final class MyDiffDataSource: UIViewController {
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
-    
-    
 }
+
+//  MARK: -  Extension for Diff data sources
 extension MyDiffDataSource  {
+
+    fileprivate func setUpDataSource() {
+        dataSource = UITableViewDiffableDataSource<Section,MYNumber>(tableView: tableView) {
+            (tableView: UITableView,
+             indexPath: IndexPath,
+             item: MYNumber) -> UITableViewCell? in
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            cell.textLabel?.text = item.numberName
+            return cell
+        }
+    }
 
     func updateUI(animated: Bool = true) {
 //        guard let controller = self.wifiController else { return }
@@ -120,15 +129,6 @@ extension MyDiffDataSource  {
         items.remove(at: 4)
         updateUI()
     }
-
-    
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let item = items[indexPath.row]
-//        print(" in \(#function) at line \(#line)")
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-//        cell.textLabel?.text = item.numberName
-//        return cell
-//    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         items.count
