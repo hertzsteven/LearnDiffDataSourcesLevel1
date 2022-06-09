@@ -125,8 +125,22 @@ extension MyDiffDataSource  {
     }
     
     func removeItemsandupdateUI()  {
-        items.remove(at: 2)
-        items.remove(at: 4)
+        switch Int.random(in: 0...1) {
+        case 0:
+            print("0")
+        case 1:
+            print("1")
+        default:
+            print("defaulty")
+        }
+
+        let uppercaseLetters = (65...90).map {String(UnicodeScalar($0))}
+        func randomLetter() -> String {
+            return uppercaseLetters.randomElement()!
+        }
+//        Int.random(in: 0..<items.count())
+        items.remove(at: Int.random(in: 0..<items.count))
+        items.remove(at: Int.random(in: 0..<items.count))
         updateUI()
     }
     
