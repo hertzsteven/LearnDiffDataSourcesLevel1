@@ -124,23 +124,43 @@ extension MyDiffDataSource  {
         self.dataSource.apply(snapshot, animatingDifferences: animated)
     }
     
-    func removeItemsandupdateUI()  {
-        switch Int.random(in: 0...1) {
-        case 0:
+    func changeItemsandupdateUI()  {
+        
+        func addItems() {
+            let allLetters : [String] = {
+                let uppercaseLetters = (65...90).map {String(UnicodeScalar($0))}
+                let lowercaseLetters = (97...122).map { String(UnicodeScalar($0))}
+                return (uppercaseLetters + lowercaseLetters).shuffled()
+            }()
+
+            var itemName = ""
+            for _ in 1...3 {
+                itemName = ""
+                for _ in 1...8 {
+                    itemName.append(allLetters.randomElement() ?? " ")
+                }
+                items.append(MYNumber(numberName: itemName))
+            }
             print("0")
-        case 1:
-            print("1")
-        default:
-            print("defaulty")
         }
 
-        let uppercaseLetters = (65...90).map {String(UnicodeScalar($0))}
-        func randomLetter() -> String {
-            return uppercaseLetters.randomElement()!
+        func deleteItems() {
+            for _ in 0...min(4, items.count) where items.count > 0 {
+                items.remove(at: Int.random(in: 0..<items.count))
+            }
+            print("1")
         }
-//        Int.random(in: 0..<items.count())
-        items.remove(at: Int.random(in: 0..<items.count))
-        items.remove(at: Int.random(in: 0..<items.count))
+
+        
+        switch Int.random(in: 0...1) {
+        case 0:
+            addItems()
+        case 1:
+            deleteItems()
+        default:
+            break
+        }
+
         updateUI()
     }
     
@@ -157,7 +177,7 @@ extension MyDiffDataSource {
         let button1 = UIButton(configuration: UIButton.Configuration.filled(),
                                primaryAction: UIAction(title: "Hello From One") { action in
             print(action.title)
-            self.removeItemsandupdateUI()
+            self.changeItemsandupdateUI()
         }
         )
         
